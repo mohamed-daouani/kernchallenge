@@ -1,0 +1,19 @@
+from flask import Flask, jsonify
+
+from .config import DevConfig
+from .extensions import db, migrate, jwt, cors
+
+def create_app(config_class=DevConfig):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+    jwt.init_app(app)
+    cors.init_app(app, ressources={r"/api/*": {"origins": "*"}})
+
+    from . import models
+    from .routes.health import bp as health_bp
+    app.register_blueprint(health_bp, url_prefix="/api")
+
+    return app
