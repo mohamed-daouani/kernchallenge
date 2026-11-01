@@ -1,7 +1,8 @@
 from flask import Flask, jsonify
-
 from .config import DevConfig
 from .extensions import db, migrate, jwt, cors
+from .cli import register_commands
+
 
 def create_app(config_class=DevConfig):
     app = Flask(__name__)
@@ -15,5 +16,7 @@ def create_app(config_class=DevConfig):
     from . import models
     from .routes.health import bp as health_bp
     app.register_blueprint(health_bp, url_prefix="/api")
+
+    register_commands(app)
 
     return app
