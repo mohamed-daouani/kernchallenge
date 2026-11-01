@@ -41,3 +41,14 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def to_dict(self):
+        return{
+            "id": self.id,
+            "email": self.email,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "job_title": self.job_title,
+            "role": self.role.value,
+            "weekly_target_minutes": self.weekly_target_minutes,
+        }
