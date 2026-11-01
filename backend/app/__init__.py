@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 from .config import DevConfig
 from .extensions import db, migrate, jwt, cors
-from .cli import register_commands
 
 
 def create_app(config_class=DevConfig):
@@ -17,10 +16,13 @@ def create_app(config_class=DevConfig):
     from .routes.health import bp as health_bp
     from . import jwt_callbacks
     from .routes.auth import bp as auth_bp
+    from .routes.projects import bp as projects_bp
+    from .cli import register_commands
+
 
     app.register_blueprint(health_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
-    app.register_blueprint(health_bp, url_prefix="/api")
+    app.register_blueprint(projects_bp, url_prefix="/api/projects")
 
     register_commands(app)
 
