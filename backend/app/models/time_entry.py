@@ -32,3 +32,20 @@ class TimeEntry(db.Model):
 
     def compute_duration(self):
         self.duration_minutes = int((self.end_at - self.start_at).total_seconds() // 60)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "project": {
+                "id": self.project.id,
+                "name": self.project.name,
+                "code": self.project.code,
+            },
+            "description": self.description,
+            "start_at": self.start_at.isoformat(),
+            "end_at": self.end_at.isoformat(),
+            "duration_minutes": self.duration_minutes,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
