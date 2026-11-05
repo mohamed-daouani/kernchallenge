@@ -10,7 +10,7 @@ def create_app(config_class=DevConfig):
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
-    cors.init_app(app, ressources={r"/api/*": {"origins": "*"}})
+    cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
 
     from . import models
     from .routes.health import bp as health_bp
