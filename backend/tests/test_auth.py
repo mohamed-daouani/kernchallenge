@@ -49,3 +49,43 @@ def test_logout_revokes_token(client, auth):
     assert client.post("/api/auth/logout", headers=auth).status_code == 200
     assert client.get("/api/auth/me", headers=auth).status_code == 401
     assert RevokedToken.query.count() == 1
+
+
+VALID_SIGNUP = {
+    "email": "New@Test.dev ",  # majuscules + espace : doit être normalisé
+    "password": "password123",
+    "first_name": "New",
+    "last_name": "User",
+}
+
+
+def test_register_creates_user(client):
+    res = client.post("/api/auth/register", json=VALID_SIGNUP)
+    assert res.status_code == 201
+    created = res.get_json()["user"]
+    assert created["email"] == "new@test.dev"
+    assert created["role"] == "user"
+    assert "password_hash" not in created
+
+
+def test_registered_user_can_login(client):
+    client.post("/api/auth/register", json=VALID_SIGNUP)
+    res = client.post("/api/auth/login", json={"email": "new@test.dev", "password": "password123"})
+    assert res.status_code == 200
+
+
+def test_register_ignores_role_in_payload(client):
+    res = client.post("/api/auth/register", json={**VALID_SIGNUP, "role": "admin"})
+    assert res.status_code == 201
+    assert res.get_json()["user"]["role"] == "user"
+
+
+def test_register_duplicate_email(client, user):
+    res = client.post("/api/auth/register", json={**VALID_SIGNUP, "email": user.email.upper()})
+    assert res.status_code == 409
+
+
+def test_register_validation(client):
+    res = client.post("/api/auth/register", json={"email": "nope", "password": "short"})
+    assert res.status_code == 400
+    assert set(res.get_json()["errors"]) == {"email", "password", "first_name", "last_name"}
