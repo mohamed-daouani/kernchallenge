@@ -85,6 +85,6 @@ def create_entry(client):
             "end_at": end,
             **extra,
         }
-        return client.post("/api/entries", json=payload, headers=headers)
+        return client.post("/api/time-entries", json=payload, headers=headers)
 
     return _create

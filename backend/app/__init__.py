@@ -25,8 +25,8 @@ def create_app(config_class=DevConfig):
     app.register_blueprint(health_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(projects_bp, url_prefix="/api/projects")
-    app.register_blueprint(entries_bp, url_prefix ="/api/entries")
-    app.register_blueprint(stats_bp, url_prefix="/api/stats")
+    app.register_blueprint(entries_bp, url_prefix="/api/time-entries")
+    app.register_blueprint(stats_bp, url_prefix="/api/dashboard")
 
 
     register_commands(app)
