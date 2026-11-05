@@ -20,6 +20,7 @@ def create_app(config_class=DevConfig):
     from .routes.entries import bp as entries_bp
     from .routes.stats import bp as stats_bp
     from .cli import register_commands
+    from .errors import register_error_handlers
 
 
     app.register_blueprint(health_bp, url_prefix="/api")
@@ -30,5 +31,6 @@ def create_app(config_class=DevConfig):
 
 
     register_commands(app)
+    register_error_handlers(app)
 
     return app 
