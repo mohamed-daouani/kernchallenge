@@ -28,3 +28,15 @@ class Project(db.Model):
 
     owner = db.relationship("User", back_populates="projects")
     entries = db.relationship("TimeEntry", back_populates="project")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "owner_id": self.owner_id,
+            "name": self.name,
+            "code": self.code,
+            "description": self.description,
+            "status": self.status.value,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
